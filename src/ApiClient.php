@@ -119,10 +119,6 @@ abstract class ApiClient{
         if( $authorizedCall ){
             //   SIGN API/Authorized call
 
-            if( $status["http_code"]!=401 ){
-                $retry_attempts = 0;
-            }
-
             switch( $status["http_code"] ){
 
                 case 0:
@@ -180,8 +176,8 @@ abstract class ApiClient{
                     if(  $authorizedCall  ){ // if authorized call and 401, refresh token ..
                         // Access token Expired
                         $resp = ZohoSign::getCurrentUser()->generateAccessTokenUsingRefreshToken();
-                        if( isset($resp) && $retry_attempts==0 ){
-                            ++$retry_attempts;
+                        if( isset($resp) && self::$retry_attempts == 0 ){
+                            self::$retry_attempts++;
                             return self::makeCall( $URL, $method, $queryparams, $postData, $MultipartFormData, $file_response, $authorizedCall  );
                         }else{
                             throw new SignException( $response->message, $response->code );
@@ -224,7 +220,7 @@ abstract class ApiClient{
         }
     }
 
-    private function constructErrorMessageFromAPIResponse( $response ){
+    private static function constructErrorMessageFromAPIResponse( $response ){
 
         // it is possible there are more keys than basic ones.
 

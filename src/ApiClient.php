@@ -178,7 +178,7 @@ abstract class ApiClient{
                         $resp = ZohoSign::getCurrentUser()->generateAccessTokenUsingRefreshToken();
                         if( isset($resp) && self::$retry_attempts == 0 ){
                             self::$retry_attempts++;
-                            return self::makeCall( $URL, $method, $queryparams, $postData, $MultipartFormData, $file_response, $authorizedCall  );
+                            return self::makeCall( $URL, $method, [], $postData, $MultipartFormData, $file_response, $authorizedCall  );
                         }else{
                             throw new SignException( $response->message, $response->code );
                         }

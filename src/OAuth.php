@@ -2,6 +2,7 @@
 
 namespace zsign;
 
+use zsign\Exceptions\GenerateAccessTokenException;
 use zsign\SignException;
 use zsign\ApiClient;
 
@@ -137,10 +138,8 @@ class OAuth {
 		if( isset($response->data->access_token) ){
 			$this->access_token = $response->data->access_token;
 			return $response->data->access_token ;
-		}else{
-			return null;
 		}
-
+		throw new GenerateAccessTokenException($response);
 	}
 
 }
